@@ -28,7 +28,7 @@ import { DriveApp } from "clasp";
 
 class KintoneManager {
     constructor() {
-        this.Initialize(...arguments);
+        this.initialize(...arguments);
     }
 
     /**
@@ -48,7 +48,7 @@ class KintoneManager {
      * @param {string} [basic.pass] authentication fragment
      * @constructor
      */
-    Initialize(subdomain, apps, user, pass, basic) {
+    initialize(subdomain, apps, user, pass, basic) {
         this.subdomain = subdomain;
         this.authorization = null;
         this.apps = apps;
