@@ -44,11 +44,7 @@ const getFormResponse = ({ response }) => {
     const convertToDateAndTimeValue = (postValue) => {
         const timeZone = "Asia/Tokyo";
         const ISOformat = "yyyy-MM-dd'T'HH:mm:ss'+09:00'";
-        return Utilities.formatDate(
-            new Date(postValue),
-            timeZone,
-            ISOformat
-        );
+        return Utilities.formatDate(new Date(postValue), timeZone, ISOformat);
     };
 
     //ユーザー系の形式対応
@@ -116,13 +112,13 @@ const getFormResponse = ({ response }) => {
     console.log("Response JSON is '%s'", records);
     return records;
 };
-const getFormFileDate = ({response},manager) => {
+const getFormFileDate = ({ response }, manager) => {
     const itemResponses = response.getItemResponses(); //アンケートの回答を取得
     //Mapオブジェクトの定義
     //[添付ファイルのフォームタイトル,対応するkintoneのフィールドコード]...
     const fMap = new Map([
-        ["添付ファイル1","file1"],
-        ["添付ファイル2","file2"],
+        ["添付ファイル1", "file1"],
+        ["添付ファイル2", "file2"]
     ]);
 
     itemResponses.forEach((itemResponse) => {
@@ -131,10 +127,8 @@ const getFormFileDate = ({response},manager) => {
             const postValue = itemResponse.getResponse();
             const filecode = null;
         }
-    })
-    
-
-}
+    });
+};
 
 const sendToKintone = (e) => {
     //認証情報を入力する
@@ -156,14 +150,14 @@ const sendToKintone = (e) => {
     //ライブラリ「MDT2NQ9jkAGYJ-7ftp_A0v08CaFRWuzzx」を利用する
     //src: https://github.com/Arahabica/KintoneManager/blob/master/KintoneManager.gs
     //doc: https://qiita.com/Arahabica/items/063877b0da439020d2c2
-    const manager = new KintoneManager.KintoneManager(subdomain, apps);
+    const manager = new KintoneManager(subdomain, apps);
     //パスワード認証の場合は直前の行を下のように書き換える
-    //const manager = new KintoneManager.KintoneManager(subdomain, apps, user, pass);
-    let str = getFormResponse(e);//POSTする通常回答を取得する
+    //const manager = new KintoneManager(subdomain, apps, user, pass);
+    let str = getFormResponse(e); //POSTする通常回答を取得する
 
     //Googleフォームの添付ファイルを取得する
     //使わない場合はコメントアウト
-    str += getFormFileDate(e,manager);
+    str += getFormFileDate(e, manager);
     //特殊文字のエスケープ処理
     str = str.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t");
     const records = JSON.parse(str); //JSON形式に変換

@@ -2,7 +2,6 @@ import { Utilities } from "clasp";
 import { UrlFetchApp } from "clasp";
 import { DriveApp } from "clasp";
 
-
 /**
  * user, passが指定されれば、パスワード認証
  * 指定されなければ、APIトークン認証
@@ -27,25 +26,29 @@ import { DriveApp } from "clasp";
  * }
  */
 
-/**
- * Initialize
- * @param {string} subdomain your subdomain (For kintone.com domains,
- *   you must state the FQDN such as "subdomain.kintone.com" )
- * @param {object} apps list of Applications
- * @param {object} apps.app application information
- * @param {number} apps.app.appid application ID
- * @param {string} apps.app.name application name
- * @param {number} [apps.app.guestid] Guest id if you are a guest account.
- * @param {string} [apps.app.token] accessible API tokens ex) "API_TOKEN1,API_TOKEN2"
- * @param {string} [user] user name or encoded authentication information: base64("USER:PASS")
- * @param {string} [pass] password
- * @param {object} [basic] user and pass required for basic authentication
- * @param {string} [basic.user] authentication fragment
- * @param {string} [basic.pass] authentication fragment
- * @constructor
- */
 class KintoneManager {
-    constructor(subdomain, apps, user, pass, basic) {
+    constructor() {
+        this.Initialize(...arguments);
+    }
+
+    /**
+     * Initialize
+     * @param {string} subdomain your subdomain (For kintone.com domains,
+     *   you must state the FQDN such as "subdomain.kintone.com" )
+     * @param {object} apps list of Applications
+     * @param {object} apps.app application information
+     * @param {number} apps.app.appid application ID
+     * @param {string} apps.app.name application name
+     * @param {number} [apps.app.guestid] Guest id if you are a guest account.
+     * @param {string} [apps.app.token] accessible API tokens ex) "API_TOKEN1,API_TOKEN2"
+     * @param {string} [user] user name or encoded authentication information: base64("USER:PASS")
+     * @param {string} [pass] password
+     * @param {object} [basic] user and pass required for basic authentication
+     * @param {string} [basic.user] authentication fragment
+     * @param {string} [basic.pass] authentication fragment
+     * @constructor
+     */
+    Initialize(subdomain, apps, user, pass, basic) {
         this.subdomain = subdomain;
         this.authorization = null;
         this.apps = apps;
