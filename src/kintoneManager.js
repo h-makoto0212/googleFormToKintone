@@ -156,8 +156,8 @@ class KintoneManager {
         const boundary = "blob";
         // data -> multipart/form-data
         const data = `--${boundary}
-  Content-Disposition: form-data; name="file"; filename="${file.getName()}"
-  Content-Type:${file.getMimeType()}\r\n\r\n`;
+Content-Disposition: form-data; name="file"; filename="${file.getName()}"
+Content-Type:${file.getMimeType()}\r\n\r\n`;
         const payload = Utilities.newBlob(data)
             .getBytes()
             .concat(file.getBlob().getBytes())
