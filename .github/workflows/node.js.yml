@@ -27,6 +27,6 @@ jobs:
     - name: npm install
       run: npm install
     - name: webpack build
-      run: npm run build --if-present
+      run: npm run build
     - name: jest
       run: npm test
