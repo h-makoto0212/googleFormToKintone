@@ -20,6 +20,7 @@
  *   user: "example",
  *   pass: "xxxxx"
  * }
+ *
  */
 
 export default class KintoneManager {
