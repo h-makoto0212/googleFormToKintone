@@ -184,32 +184,6 @@ export default class KintoneManager {
     }
 
     /**
-     * Upload File
-     * @param {string} app_name Application name
-     * @param {string} file_id Upload file of Google Drive fIle ID
-     * @returns {HTTPResponse}
-     *     ref) https://developer.cybozu.io/hc/ja/articles/201941824
-     */
-    upload(app_name, file_id) {
-        const app = this.apps[app_name];
-        const file = DriveApp.getFileById(file_id);
-        const boundary = "blob";
-        // data -> multipart/form-data
-        const data = `--${boundary}
-Content-Disposition: form-data; name="file"; filename="${file.getName()}"
-Content-Type:${file.getMimeType()}\r\n\r\n`;
-        const payload = Utilities.newBlob(data)
-            .getBytes()
-            .concat(file.getBlob().getBytes())
-            .concat(Utilities.newBlob(`\r\n--${boundary}--`).getBytes());
-        const response = UrlFetchApp.fetch(
-            "@1/file.json".replace(/@1/g, this._getEndpoint(app.guestid)),
-            this._uploadOption(app, payload, boundary)
-        );
-        return response;
-    }
-
-    /**
      * option for GET Method
      * @param {object} app Application object
      * @returns {object} Option for UrlFetchApp
@@ -260,20 +234,6 @@ Content-Type:${file.getMimeType()}\r\n\r\n`;
         return option;
     }
 
-    /**
-     * option for DELETE Method
-     * @param {object} app Application Object
-     * @returns {object} option Option for UrlFetchApp
-     * @private
-     */
-    _deleteOption(app) {
-        const option = {
-            method: "delete",
-            headers: this._authorizationHeader(app),
-            muteHttpExceptions: true
-        };
-        return option;
-    }
     /**
      * option for UPLOAD Method
      * @param {object} app Application Object
