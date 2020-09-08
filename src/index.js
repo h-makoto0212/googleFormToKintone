@@ -1,4 +1,4 @@
-import { KintoneManager } from "/src/kintoneManager.js";
+import { KintoneManager } from ".kintoneManager";
 
 const getFormResponse = ({ response }) => {
     const itemResponses = response.getItemResponses(); //アンケートの回答を取得
