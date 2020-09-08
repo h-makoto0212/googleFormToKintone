@@ -65,6 +65,42 @@ class KintoneManager {
     }
 
     /**
+     * Utility to support multiple field formats
+     * @param {string} field Field codes to set the data
+     * @param {string|array} value Data in string or array format
+     * @param {string} format Specifies the input format of a record
+     * @return {object}
+     * @static
+     */
+    static makeRecord(field, value, format) {
+        const obj = {};
+        //Escape processing of newline character
+        const _value = value
+            .replace(/\n/g, "\\n")
+            .replace(/\r/g, "\\r")
+            .replace(/\t/g, "\\t");
+
+        const formatType = format.toLowerCase();
+        switch (formatType) {
+            default:
+                return (obj[field]["value"] = _value);
+            case "user":
+                return (obj[field]["value"]["code"] = _value);
+            case "datetime":
+            case "dt":
+                const date = new Date(value).toISOString();
+                return (obj[field]["value"] = date);
+            case "array":
+                return (obj[field]["value"] = [_value].flat());
+            case "group":
+            case "users":
+                return (obj[field]["value"]["code"] = [_value].flat());
+            case "file":
+                return (obj[field]["value"]["filekey"] = [_value].flat());
+        }
+    }
+
+    /**
      * Records registration
      * @param {string} app_name Application name
      * @param {Array} records Kintone record objects
