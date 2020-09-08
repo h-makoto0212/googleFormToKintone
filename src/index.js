@@ -1,5 +1,5 @@
 import { KintoneManager } from "./kintoneManager.js";
-import { Utilities } from "clasp";
+
 const getFormResponse = ({ response }) => {
     const itemResponses = response.getItemResponses(); //アンケートの回答を取得
     let records = "[{";
@@ -112,23 +112,6 @@ const getFormResponse = ({ response }) => {
     console.log("Response JSON is '%s'", records);
     return records;
 };
-const getFormFileDate = ({ response }, manager) => {
-    const itemResponses = response.getItemResponses(); //アンケートの回答を取得
-    //Mapオブジェクトの定義
-    //[添付ファイルのフォームタイトル,対応するkintoneのフィールドコード]...
-    const fMap = new Map([
-        ["添付ファイル1", "file1"],
-        ["添付ファイル2", "file2"]
-    ]);
-
-    itemResponses.forEach((itemResponse) => {
-        const title = itemResponse.getItem().getTitle();
-        if (fMap.has(title)) {
-            const postValue = itemResponse.getResponse();
-            const filecode = null;
-        }
-    });
-};
 
 const sendToKintone = (e) => {
     //認証情報を入力する
@@ -155,9 +138,6 @@ const sendToKintone = (e) => {
     //const manager = new KintoneManager(subdomain, apps, user, pass);
     let str = getFormResponse(e); //POSTする通常回答を取得する
 
-    //Googleフォームの添付ファイルを取得する
-    //使わない場合はコメントアウト
-    str += getFormFileDate(e, manager);
     //特殊文字のエスケープ処理
     str = str.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t");
     const records = JSON.parse(str); //JSON形式に変換

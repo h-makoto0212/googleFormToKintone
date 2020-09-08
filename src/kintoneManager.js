@@ -1,7 +1,3 @@
-import { Utilities } from "clasp";
-import { UrlFetchApp } from "clasp";
-import { DriveApp } from "clasp";
-
 /**
  * user, passが指定されれば、パスワード認証
  * 指定されなければ、APIトークン認証
@@ -24,9 +20,10 @@ import { DriveApp } from "clasp";
  *   user: "example",
  *   pass: "xxxxx"
  * }
+ *
  */
 
-class KintoneManager {
+export default class KintoneManager {
     constructor() {
         this.initialize(...arguments);
     }
@@ -41,7 +38,8 @@ class KintoneManager {
      * @param {string} apps.app.name application name
      * @param {number} [apps.app.guestid] Guest id if you are a guest account.
      * @param {string} [apps.app.token] accessible API tokens ex) "API_TOKEN1,API_TOKEN2"
-     * @param {string} [user] user name or encoded authentication information: base64("USER:PASS")
+     * @param {string} [user] user name or encoded authentication
+     *     information: base64("USER:PASS")
      * @param {string} [pass] password
      * @param {object} [basic] user and pass required for basic authentication
      * @param {string} [basic.user] authentication fragment
@@ -64,10 +62,48 @@ class KintoneManager {
     }
 
     /**
+     * Utility to support multiple field formats
+     * @param {string} field Field codes to set the data
+     * @param {string|array} value Data in string or array format
+     * @param {string} format Specifies the input format of a record
+     * @return {object}
+     * @static
+     */
+    static makeRecord(field, value, format) {
+        const obj = {};
+        //Escape processing of newline character
+        const _value = value
+            .replace(/\n/g, "\\n")
+            .replace(/\r/g, "\\r")
+            .replace(/\t/g, "\\t");
+
+        const formatType = format.toLowerCase();
+        switch (formatType) {
+            default:
+                return (obj[field]["value"] = _value);
+            case "user":
+                return (obj[field]["value"]["code"] = _value);
+            case "datetime":
+            case "dt":
+                const date = new Date(value).toISOString();
+                return (obj[field]["value"] = date);
+            case "array":
+                return (obj[field]["value"] = [_value].flat());
+            case "group":
+            case "users":
+                return (obj[field]["value"]["code"] = [_value].flat());
+            case "file":
+                return (obj[field]["value"]["filekey"] = [_value].flat());
+        }
+    }
+
+    /**
      * Records registration
      * @param {string} app_name Application name
-     * @param {Array} records Kintone record objects ref) https://developer.cybozu.io/hc/ja/articles/201941784
-     * @returns {HTTPResponse} ref) https://developers.google.com/apps-script/reference/url-fetch/http-response
+     * @param {Array} records Kintone record objects
+     *     ref) https://developer.cybozu.io/hc/ja/articles/201941784
+     * @returns {HTTPResponse}
+     *     ref) https://developers.google.com/apps-script/reference/url-fetch/http-response
      */
     create(app_name, records) {
         const app = this.apps[app_name];
@@ -85,7 +121,8 @@ class KintoneManager {
     /**
      * Search records
      * @param {string} app_name Application name
-     * @param {string} query kintone API query ref) https://developer.cybozu.io/hc/ja/articles/202331474-%E3%83%AC%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E5%8F%96%E5%BE%97-GET-#step2
+     * @param {string} query kintone API query
+     *     ref) https://developer.cybozu.io/hc/ja/articles/202331474-%E3%83%AC%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E5%8F%96%E5%BE%97-GET-#step2
      * @returns {Array} search results
      */
     search(app_name, query) {
@@ -105,7 +142,8 @@ class KintoneManager {
      * Updates records
      * @param {string} app_name Application name
      * @param {Array} records Array of records that will be updated.
-     * @returns {HTTPResponse} ref) https://developers.google.com/apps-script/reference/url-fetch/http-response
+     * @returns {HTTPResponse}
+     *     ref) https://developers.google.com/apps-script/reference/url-fetch/http-response
      */
     update(app_name, records) {
         const app = this.apps[app_name];
@@ -124,7 +162,8 @@ class KintoneManager {
      * Deletes Records
      * @param {string} app_name Application name
      * @param {Array} record_ids Array of record IDs that will be deleted.
-     * @returns {HTTPResponse} ref) https://developers.google.com/apps-script/reference/url-fetch/http-response
+     * @returns {HTTPResponse}
+     *     ref) https://developers.google.com/apps-script/reference/url-fetch/http-response
      */
     destroy(app_name, record_ids) {
         const app = this.apps[app_name];
@@ -215,7 +254,7 @@ class KintoneManager {
 
     /**
      * Gets Endpoint
-     * @param {string} [guest_id] (optional) Guest id if you are a guest account.
+     * @param {string} [guest_id] Guest id if you are a guest account.
      * @returns {string} Endpoint url
      * @private
      */
@@ -235,7 +274,7 @@ class KintoneManager {
     /**
      * Header Authentication Information
      * @param {object} app Application object
-     * @param {string} app.token (optional)Application's API token
+     * @param {string} [app.token] Application's API token
      * @returns {object} Authentication Information
      * @throws {Exception} Authentication is null
      * @private
