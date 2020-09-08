@@ -1,5 +1,5 @@
 import { KintoneManager } from "./kintoneManager.js";
-import { Utilities } from "clasp";
+
 const getFormResponse = ({ response }) => {
     const itemResponses = response.getItemResponses(); //アンケートの回答を取得
     let records = "[{";

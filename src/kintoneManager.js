@@ -1,7 +1,3 @@
-import { Utilities } from "clasp";
-import { UrlFetchApp } from "clasp";
-import { DriveApp } from "clasp";
-
 /**
  * user, passが指定されれば、パスワード認証
  * 指定されなければ、APIトークン認証
@@ -26,7 +22,7 @@ import { DriveApp } from "clasp";
  * }
  */
 
-class KintoneManager {
+export default class KintoneManager {
     constructor() {
         this.initialize(...arguments);
     }
