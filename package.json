@@ -1,16 +1,20 @@
 {
-  "name": "google-form",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/index.js",
-  "dependencies": {
-    "clasp": "1.0.0",
-    "webpack": "4.44.1",
-    "webpack-cli": "3.3.12"
-  },
-  "devDependencies": {
-    "@babel/core": "7.2.0",
-    "parcel-bundler": "^1.6.1"
-  },
-  "keywords": []
+    "name": "google-form",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.js",
+    "scripts": {
+        "build": "webpack",
+        "test": "jest"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@babel/core": "7.2.0",
+        "parcel-bundler": "^1.6.1",
+        "clasp": "1.0.0",
+        "jest": "26.4.2",
+        "webpack": "4.44.1",
+        "webpack-cli": "3.3.12"
+    },
+    "keywords": []
 }
